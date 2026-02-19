@@ -1,5 +1,6 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { ThrottlerModule } from "@nestjs/throttler";
 import { envSchema } from "./config/env.schema";
 import { JobModule } from "./job/job.module";
 
@@ -11,6 +12,11 @@ import { JobModule } from "./job/job.module";
 				return envSchema.parse(config);
 			},
 		}),
+		ThrottlerModule.forRoot([
+			{ name: "short", ttl: 10_000, limit: 20 },
+			{ name: "medium", ttl: 60_000, limit: 60 },
+			{ name: "long", ttl: 600_000, limit: 300 },
+		]),
 		JobModule,
 	],
 })
