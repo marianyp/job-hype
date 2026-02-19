@@ -1,0 +1,26 @@
+{
+	"name": "@job-hype/shared",
+	"version": "0.0.0",
+	"description": "",
+	"license": "UNLICENSED",
+	"author": "Mariany Pinkston",
+	"exports": {
+		".": {
+			"types": "./dist/src/index.d.ts",
+			"default": "./dist/src/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc -p tsconfig.json",
+		"build:watch": "tsc -p tsconfig.json --watch",
+		"clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+	},
+	"dependencies": {
+		"@orpc/contract": "^1.13.5",
+		"typescript": "^5.9.3",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@types/node": "^25.2.3"
+	}
+}
