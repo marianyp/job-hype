@@ -48,17 +48,17 @@ export class TrendSeriesCachePlugin<
 		options.interceptors.unshift(async interceptorOptions => {
 			const { next } = interceptorOptions;
 
-			const req = this.getRequest(interceptorOptions.context);
+			const request = this.getRequest(interceptorOptions.context);
 
-			if (!req) {
+			if (!request) {
 				return await next();
 			}
 
-			if (req.method !== "GET") {
+			if (request.method !== "GET") {
 				return await next();
 			}
 
-			const parsedQuery = TrendSeriesInputSchema.safeParse(req.query);
+			const parsedQuery = TrendSeriesInputSchema.safeParse(request.query);
 
 			if (!parsedQuery.success) {
 				return await next();
