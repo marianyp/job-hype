@@ -1,4 +1,5 @@
 import { GranularityKey } from "@job-hype/shared";
+import { DateTime } from "luxon";
 import { Granularity } from "./granularity";
 
 enum DayOfWeek {
@@ -16,12 +17,13 @@ export class WeekGranularity extends Granularity {
 		super(GranularityKey.Week, 7);
 	}
 
-	protected getRawValue(date: Date): string {
+	protected getRawValue(date: DateTime): string {
 		const days = Object.values(DayOfWeek);
-		const day = days[date.getDay()];
+		const dayIndex = date.weekday % 7;
+		const day = days[dayIndex];
 
 		if (day === undefined) {
-			throw new RangeError(`Unexpected day index: ${String(day)}`);
+			throw new RangeError(`Unexpected day index: ${dayIndex}`);
 		}
 
 		return day;

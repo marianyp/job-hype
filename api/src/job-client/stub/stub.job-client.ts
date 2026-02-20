@@ -33,7 +33,7 @@ export class StubJobClient extends JobClient<StubResponse> {
 	}
 
 	protected override mapJobs(response: StubResponse): Job[] {
-		return response.items.map(result => new Job(new Date(result.date_posted)));
+		return response.items.map(result => new Job(result.date_posted));
 	}
 
 	protected override getNextPage(response: StubResponse): number | null {

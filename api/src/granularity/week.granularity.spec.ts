@@ -64,11 +64,8 @@ describe("WeekGranularity", () => {
 			];
 
 			for (let i = 0; i < 7; i++) {
-				const date = new Date(sunday);
-				date.setUTCDate(date.getUTCDate() + i);
-
-				const origin = new Date(date);
-				origin.setUTCDate(origin.getUTCDate() + 1);
+				const date = sunday.plus({ days: i });
+				const origin = date.plus({ days: 1 });
 
 				expect(granularity.getValue(date, origin)).toBe(expected[i]);
 			}
@@ -101,15 +98,15 @@ describe("WeekGranularity", () => {
 		});
 
 		it("should match getValue results", () => {
+			const days = 7;
 			const originDate = dateAtUtcNoon(1, 8, 2026);
 			const values = granularity.getValues(originDate);
 
-			for (let i = 7; i >= 1; i--) {
-				const date = new Date(originDate);
-				date.setUTCDate(date.getUTCDate() - i);
+			for (let i = days; i >= 1; i--) {
+				const date = originDate.minus({ days: i });
 
 				const value = granularity.getValue(date, originDate);
-				expect(value).toBe(values[7 - i]);
+				expect(value).toBe(values[days - i]);
 			}
 		});
 	});

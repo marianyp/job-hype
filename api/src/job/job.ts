@@ -1,7 +1,9 @@
-export class Job {
-	public readonly postedDate: Date;
+import { DateTime } from "luxon";
 
-	public constructor(value: Date | string) {
+export class Job {
+	public readonly postedDate: DateTime;
+
+	public constructor(value: DateTime | string) {
 		if (typeof value === "string") {
 			const date = Job.parseDate(value);
 
@@ -15,8 +17,8 @@ export class Job {
 		}
 	}
 
-	public static parseDate(value: string): Date | null {
-		const date = new Date(value);
+	public static parseDate(value: string): DateTime | null {
+		const date = DateTime.fromISO(value);
 
 		if (isNaN(date.valueOf())) {
 			return null;

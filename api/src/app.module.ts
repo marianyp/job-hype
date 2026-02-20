@@ -1,11 +1,15 @@
+import { CacheModule } from "@nestjs/cache-manager";
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ThrottlerModule } from "@nestjs/throttler";
 import { envSchema } from "./config/env.schema";
+import { DateModule } from "./date/date.module";
 import { JobModule } from "./job/job.module";
+import { TrendSeriesCacheModule } from "./trend-series-cache/trend-series-cache.module";
 
 @Module({
 	imports: [
+		CacheModule.register({ isGlobal: true }),
 		ConfigModule.forRoot({
 			isGlobal: true,
 			validate: config => {
@@ -18,6 +22,8 @@ import { JobModule } from "./job/job.module";
 			{ name: "long", ttl: 600_000, limit: 300 },
 		]),
 		JobModule,
+		TrendSeriesCacheModule,
+		DateModule,
 	],
 })
 export class AppModule {}

@@ -1,5 +1,7 @@
 import { TrendPoint, TrendSeriesDto, TrendSeriesInput } from "@job-hype/shared";
 import { Inject, Injectable } from "@nestjs/common";
+import { DateTime } from "luxon";
+import { DateService } from "src/date/date.service";
 import { Granularity } from "src/granularity/granularity";
 import { GranularityRegistry } from "src/granularity/granularity.registry";
 import { JobClient } from "src/job-client/job-client";
@@ -11,7 +13,8 @@ import { JobQuery } from "./job-query";
 export class JobService {
 	public constructor(
 		@Inject(JOB_CLIENTS) private readonly clients: JobClient[],
-		private readonly granularityRegistry: GranularityRegistry
+		private readonly granularityRegistry: GranularityRegistry,
+		private readonly dateService: DateService
 	) {}
 
 	public async fetchAndGetTrendSeries(
@@ -19,7 +22,7 @@ export class JobService {
 	): Promise<TrendSeriesDto> {
 		const { granularity: granularityKey, title } = input;
 
-		const originDate = new Date();
+		const originDate = this.dateService.getDate();
 
 		const query = new JobQuery(title);
 		const granularity = this.granularityRegistry.get(granularityKey);
@@ -40,7 +43,7 @@ export class JobService {
 	public static getTrendSeries(
 		jobBatches: Job[][],
 		granularity: Granularity,
-		originDate: Date
+		originDate: DateTime
 	): TrendSeriesDto {
 		const completeCountMap = jobBatches
 			.map(jobs => this.countByBucket(jobs, granularity, originDate))
@@ -63,7 +66,7 @@ export class JobService {
 	private static getTrendPoints(
 		countMaps: Map<string, number>[],
 		granularity: Granularity,
-		originDate: Date
+		originDate: DateTime
 	): TrendPoint[] {
 		return granularity
 			.getValues(originDate)
@@ -109,7 +112,7 @@ export class JobService {
 	public static countByBucket(
 		jobs: Job[],
 		granularity: Granularity,
-		originDate: Date
+		originDate: DateTime
 	): Map<string, number> {
 		const counts = new Map<string, number>();
 
@@ -127,7 +130,7 @@ export class JobService {
 	public static withAllBuckets(
 		counts: Map<string, number>,
 		granularity: Granularity,
-		originDate: Date
+		originDate: DateTime
 	): Map<string, number> {
 		const map = new Map<string, number>();
 		const buckets = granularity.getValues(originDate);

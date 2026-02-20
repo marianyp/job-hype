@@ -1,4 +1,5 @@
 import { GranularityKey } from "@job-hype/shared";
+import { DateTime } from "luxon";
 import { Granularity } from "./granularity";
 
 export class MonthGranularity extends Granularity {
@@ -6,13 +7,9 @@ export class MonthGranularity extends Granularity {
 		super(GranularityKey.Month, 30);
 	}
 
-	protected getRawValue(date: Date): string {
-		return this.formatMonthDay(date);
-	}
-
-	private formatMonthDay(date: Date): string {
-		const monthName = date.toLocaleString("en-US", { month: "long" });
-		const dayOfMonth = date.getDate();
+	protected getRawValue(date: DateTime): string {
+		const monthName = date.setLocale("en-US").toFormat("LLLL");
+		const dayOfMonth = date.day;
 
 		const lastTwoDigits = dayOfMonth % 100;
 		const lastDigit = dayOfMonth % 10;

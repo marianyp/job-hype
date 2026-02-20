@@ -1,6 +1,10 @@
 import * as z from "zod";
 
 export const envSchema = z.object({
+	CACHE_VERSION: z.coerce.number(),
+
+	TIMEZONE: z.string(),
+
 	ADZUNA_BASE_URL: z.url(),
 	ADZUNA_APP_ID: z.string().min(1),
 	ADZUNA_APP_KEY: z.string().min(1),

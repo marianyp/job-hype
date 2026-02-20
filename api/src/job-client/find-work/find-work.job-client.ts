@@ -50,9 +50,7 @@ export class FindworkJobClient extends JobClient<FindWorkResponse> {
 	}
 
 	protected override mapJobs(response: FindWorkResponse): Job[] {
-		return response.results.map(
-			result => new Job(new Date(result.date_posted))
-		);
+		return response.results.map(result => new Job(result.date_posted));
 	}
 
 	protected override getNextPage(response: FindWorkResponse): number | null {

@@ -1,4 +1,5 @@
 import { GranularityKey } from "@job-hype/shared";
+import { DateTime } from "luxon";
 
 export abstract class Granularity {
 	public constructor(
@@ -10,7 +11,7 @@ export abstract class Granularity {
 		return this.key;
 	}
 
-	public getValue(date: Date, origin: Date): string | null {
+	public getValue(date: DateTime, origin: DateTime): string | null {
 		if (this.isInBounds(date, origin)) {
 			return this.getRawValue(date).toLowerCase();
 		}
@@ -18,29 +19,21 @@ export abstract class Granularity {
 		return null;
 	}
 
-	protected isInBounds(date: Date, originDate: Date): boolean {
-		const base = new Date(originDate);
-		base.setHours(12, 0, 0, 0);
+	protected isInBounds(date: DateTime, originDate: DateTime): boolean {
+		const base = originDate.toUTC().startOf("day");
+		const target = date.toUTC().startOf("day");
 
-		const target = new Date(date);
-		target.setHours(12, 0, 0, 0);
-
-		const millisecondsPerDay = 24 * 60 * 60 * 1000;
-
-		const daysElapsed = Math.floor(
-			(base.getTime() - target.getTime()) / millisecondsPerDay
-		);
+		const daysElapsed = Math.trunc(base.diff(target, "days").days);
 
 		return daysElapsed >= 1 && daysElapsed <= this.dayRange;
 	}
 
-	public getValues(originDate: Date): string[] {
-		const base = new Date(originDate);
+	public getValues(originDate: DateTime): string[] {
+		const originUtcDate = originDate.toUTC();
 		const values: string[] = [];
 
 		for (let i = this.dayRange; i >= 1; i--) {
-			const date = new Date(base);
-			date.setDate(originDate.getDate() - i);
+			const date = originUtcDate.minus({ days: i });
 			values.push(this.getRawValue(date).toLowerCase());
 		}
 
@@ -51,5 +44,5 @@ export abstract class Granularity {
 		return this.getKey();
 	}
 
-	protected abstract getRawValue(date: Date): string;
+	protected abstract getRawValue(date: DateTime): string;
 }

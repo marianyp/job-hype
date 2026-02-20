@@ -1,5 +1,7 @@
 import { GranularityKey, TrendPoint } from "@job-hype/shared";
 import { Test, TestingModule } from "@nestjs/testing";
+import { DateTime } from "luxon";
+import { DateModule } from "src/date/date.module";
 import { GranularityModule } from "src/granularity/granularity.module";
 import { MonthGranularity } from "src/granularity/month.granularity";
 import { WeekGranularity } from "src/granularity/week.granularity";
@@ -11,11 +13,18 @@ import { JobController } from "./job.controller";
 import { JobService } from "./job.service";
 
 describe("JobService", () => {
+	const now = DateTime.now();
+
 	let service: JobService;
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
-			imports: [...testImports, GranularityModule, JobsSourceModule],
+			imports: [
+				...testImports,
+				GranularityModule,
+				JobsSourceModule,
+				DateModule,
+			],
 			controllers: [JobController],
 			providers: [JobService],
 		}).compile();
@@ -30,42 +39,42 @@ describe("JobService", () => {
 	describe("getTrendSeries", () => {
 		it("countByBucket should have correct granularity key (month granularity)", () => {
 			const granularity = new MonthGranularity();
-			const result = JobService.getTrendSeries([], granularity, new Date());
+			const result = JobService.getTrendSeries([], granularity, now);
 
 			expect(result.granularity).toBe(GranularityKey.Month);
 		});
 
 		it("countByBucket should have correct granularity key (week granularity)", () => {
 			const granularity = new WeekGranularity();
-			const result = JobService.getTrendSeries([], granularity, new Date());
+			const result = JobService.getTrendSeries([], granularity, now);
 
 			expect(result.granularity).toBe(GranularityKey.Week);
 		});
 
 		it("should return all buckets (month granularity)", () => {
 			const granularity = new MonthGranularity();
-			const result = JobService.getTrendSeries([], granularity, new Date());
+			const result = JobService.getTrendSeries([], granularity, now);
 
 			expect(result.points).toHaveLength(30);
 		});
 
 		it("should return all buckets (week granularity)", () => {
 			const granularity = new WeekGranularity();
-			const result = JobService.getTrendSeries([], granularity, new Date());
+			const result = JobService.getTrendSeries([], granularity, now);
 
 			expect(result.points).toHaveLength(7);
 		});
 
 		it("should return an empty trend series when there's no jobs (month granularity)", () => {
 			const granularity = new MonthGranularity();
-			const result = JobService.getTrendSeries([], granularity, new Date());
+			const result = JobService.getTrendSeries([], granularity, now);
 
 			expect(result.points.every(point => point.index === 0)).toBe(true);
 		});
 
 		it("should return an empty trend series when there's no jobs (week granularity)", () => {
 			const granularity = new WeekGranularity();
-			const result = JobService.getTrendSeries([], granularity, new Date());
+			const result = JobService.getTrendSeries([], granularity, now);
 
 			expect(result.points.every(point => point.index === 0)).toBe(true);
 		});
