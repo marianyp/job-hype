@@ -30,6 +30,8 @@
 		"@orpc/nest": "^1.13.5",
 		"@orpc/server": "^1.13.5",
 		"axios": "^1.13.5",
+		"cacheable": "^2.3.2",
+		"keyv": "^5.6.0",
 		"luxon": "^3.7.2",
 		"reflect-metadata": "^0.2.2",
 		"rxjs": "^7.8.1",

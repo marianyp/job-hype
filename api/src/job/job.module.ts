@@ -11,7 +11,7 @@ import { JobService } from "./job.service";
 		GranularityModule,
 		JobsSourceModule,
 		DateModule,
-		TrendSeriesCacheModule,
+		TrendSeriesCacheModule.register(10_000),
 	],
 	controllers: [JobController],
 	providers: [JobService],
