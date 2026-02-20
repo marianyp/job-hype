@@ -3,6 +3,7 @@ import type { Logger } from "@nestjs/common";
 import { Injectable } from "@nestjs/common";
 import { Job } from "src/job/job";
 import { JobQuery } from "src/job/job-query";
+import { TestTaskScheduler } from "src/task-scheduler/test-task-scheduler";
 import {
 	JobClient,
 	JobClientRequestParams,
@@ -13,7 +14,7 @@ import { StubResponse, StubResponseSchema } from "./stub.schemas";
 @Injectable()
 export class StubJobClient extends JobClient<StubResponse> {
 	public constructor(http: HttpService, logger: Logger) {
-		super(http, logger);
+		super(http, logger, new TestTaskScheduler());
 	}
 
 	protected override buildUrl(): string {

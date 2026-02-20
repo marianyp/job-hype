@@ -7,31 +7,31 @@ import { JobQuery } from "src/job/job-query";
 import { JobClient } from "./job-client";
 import { StubJobClient } from "./stub/stub.job-client";
 
-type Mocks = {
+type TestContext = {
 	client: JobClient;
 	httpService: jest.Mocked<HttpService>;
 	logger: jest.Mocked<LoggerService>;
 };
 
-async function getMocks<T, Y extends unknown[], C>(
-	mockInstance: jest.MockInstance<T, Y, C>
-): Promise<Mocks> {
+async function getContext<T, Y extends unknown[], C>(
+	httpGetMock: jest.MockInstance<T, Y, C>
+): Promise<TestContext> {
 	const module: TestingModule = await Test.createTestingModule({
 		providers: [
 			{
 				provide: HttpService,
 				useValue: {
-					get: mockInstance,
+					get: httpGetMock,
 				},
 			},
 			{
 				provide: Logger,
 				useValue: {
-					error: jest.fn().mockImplementation(() => {}),
-					warn: jest.fn().mockImplementation(() => {}),
-					log: jest.fn().mockImplementation(() => {}),
-					debug: jest.fn().mockImplementation(() => {}),
-					verbose: jest.fn().mockImplementation(() => {}),
+					error: jest.fn(),
+					warn: jest.fn(),
+					log: jest.fn(),
+					debug: jest.fn(),
+					verbose: jest.fn(),
 				},
 			},
 			{
@@ -53,7 +53,7 @@ async function getMocks<T, Y extends unknown[], C>(
 describe("JobClient", () => {
 	describe("fetchJobs", () => {
 		it("should fetch all pages", async () => {
-			const { client, httpService } = await getMocks(
+			const { client, httpService } = await getContext(
 				jest
 					.fn()
 					.mockReturnValueOnce(
@@ -86,7 +86,7 @@ describe("JobClient", () => {
 
 			await client.fetchJobs(new JobQuery(jobTitle));
 
-			expect(httpService.get.mockImplementation()).toHaveBeenCalledTimes(3);
+			expect(httpService.get.mock.calls.length).toEqual(3);
 
 			expect(httpService.get.mock.calls[0]?.[1]?.params).toEqual({
 				page: 1,
@@ -100,7 +100,7 @@ describe("JobClient", () => {
 		});
 
 		it("should stop if a page repeats", async () => {
-			const { client, httpService, logger } = await getMocks(
+			const { client, httpService, logger } = await getContext(
 				jest
 					.fn()
 					.mockReturnValueOnce(
@@ -124,28 +124,28 @@ describe("JobClient", () => {
 			const jobs = await client.fetchJobs(new JobQuery("software engineer"));
 
 			expect(jobs.length).toEqual(1);
-			expect(logger.warn.mockImplementation()).toHaveBeenCalledTimes(1);
-			expect(httpService.get.mockImplementation()).toHaveBeenCalledTimes(1);
+			expect(logger.warn.mock.calls.length).toEqual(1);
+			expect(httpService.get.mock.calls.length).toEqual(1);
 		});
 
 		it("should log request failure error", async () => {
-			const { client, logger } = await getMocks(
+			const { client, logger } = await getContext(
 				jest.fn().mockReturnValueOnce(throwError(() => new AxiosError()))
 			);
 
 			await client.fetchJobs(new JobQuery("software engineer"));
 
-			expect(logger.error.mockImplementation()).toHaveBeenCalled();
+			expect(logger.error.mock.calls.length).toBeGreaterThan(0);
 		});
 
 		it("should log response parsing error", async () => {
-			const { client, logger } = await getMocks(
+			const { client, logger } = await getContext(
 				jest.fn().mockReturnValueOnce(of({ data: { wrong: "shape" } }))
 			);
 
 			await client.fetchJobs(new JobQuery("software engineer"));
 
-			expect(logger.error.mockImplementation()).toHaveBeenCalled();
+			expect(logger.error.mock.calls.length).toBeGreaterThan(0);
 		});
 	});
 });

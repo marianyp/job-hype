@@ -1,20 +1,26 @@
 import { HttpService } from "@nestjs/axios";
-import { LoggerService } from "@nestjs/common";
+import { LoggerService, OnModuleDestroy } from "@nestjs/common";
 import axios from "axios";
 import { firstValueFrom } from "rxjs";
 import { Job } from "src/job/job";
 import { JobQuery } from "src/job/job-query";
+import { TaskScheduler } from "src/task-scheduler/task-scheduler.interface";
 import { ZodError, ZodType } from "zod";
 
 export type JobClientRequestParams = Record<string, string | number>;
 export type JobClientRequestHeaders = Record<string, string | number>;
 export type JobClientResponseSchema<T> = ZodType<T>;
 
-export abstract class JobClient<T = unknown> {
+export abstract class JobClient<T = unknown> implements OnModuleDestroy {
 	protected constructor(
 		protected readonly http: HttpService,
-		protected readonly loggerService: LoggerService
+		protected readonly loggerService: LoggerService,
+		protected readonly taskScheduler: TaskScheduler
 	) {}
+
+	public onModuleDestroy(): void {
+		this.taskScheduler.destroy();
+	}
 
 	public async fetchJobs(query: JobQuery): Promise<Job[]> {
 		const jobs: Job[] = [];
@@ -31,11 +37,17 @@ export abstract class JobClient<T = unknown> {
 					break;
 				}
 
-				const response = await firstValueFrom(
-					this.http.get(this.buildUrl(), {
-						params: this.buildParams(query, page),
-						headers: this.buildHeaders(),
-					})
+				const url = this.buildUrl();
+				const headers = this.buildHeaders();
+				const params = this.buildParams(query, page);
+
+				const response = await this.taskScheduler.schedule(() =>
+					firstValueFrom(
+						this.http.get(url, {
+							headers,
+							params,
+						})
+					)
 				);
 
 				const data = this.getResponseSchema().parse(response.data);
@@ -74,14 +86,14 @@ export abstract class JobClient<T = unknown> {
 
 	protected abstract buildUrl(): string;
 
+	protected buildHeaders(): JobClientRequestHeaders {
+		return {};
+	}
+
 	protected abstract buildParams(
 		query: JobQuery,
 		page: number
 	): JobClientRequestParams;
-
-	protected buildHeaders(): JobClientRequestHeaders {
-		return {};
-	}
 
 	protected abstract getResponseSchema(): JobClientResponseSchema<T>;
 

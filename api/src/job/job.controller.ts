@@ -3,14 +3,14 @@ import { Controller } from "@nestjs/common";
 import { implement, Implement } from "@orpc/nest";
 import { JobService } from "./job.service";
 
-const trendSeriesImplementer = implement(jobContract.job.trendSeries);
+const trendSeriesImplementer = implement(jobContract.job["trend-series"]);
 type TrendSeriesImpl = ReturnType<typeof trendSeriesImplementer.handler>;
 
-@Controller("job")
+@Controller()
 export class JobController {
 	public constructor(private readonly jobService: JobService) {}
 
-	@Implement(jobContract.job.trendSeries)
+	@Implement(jobContract.job["trend-series"])
 	public getTrendSeries(): TrendSeriesImpl {
 		return trendSeriesImplementer.handler(
 			async ({ input }): Promise<TrendSeriesDto> => {

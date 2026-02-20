@@ -4,6 +4,7 @@ import { ConfigService } from "@nestjs/config";
 import { Env } from "src/config/env.schema";
 import { Job } from "src/job/job";
 import { JobQuery } from "src/job/job-query";
+import { ThrottledTaskScheduler } from "src/task-scheduler/throttled-task-scheduler";
 import {
 	JobClient,
 	JobClientRequestHeaders,
@@ -15,14 +16,26 @@ import { FindWorkResponse, FindWorkResponseSchema } from "./find-work.schemas";
 @Injectable()
 export class FindworkJobClient extends JobClient<FindWorkResponse> {
 	public constructor(
-		private readonly config: ConfigService<Env>,
+		private readonly configService: ConfigService<Env>,
 		http: HttpService
 	) {
-		super(http, new Logger(FindworkJobClient.name));
+		super(
+			http,
+			new Logger(FindworkJobClient.name),
+			new ThrottledTaskScheduler(60, 60_000)
+		);
 	}
 
 	protected override buildUrl(): string {
-		return this.config.getOrThrow("FINDWORK_BASE_URL", { infer: true });
+		return this.configService.getOrThrow("FINDWORK_BASE_URL", { infer: true });
+	}
+
+	protected override buildHeaders(): JobClientRequestHeaders {
+		const token = this.configService.getOrThrow("FINDWORK_API_KEY", {
+			infer: true,
+		});
+
+		return { Authorization: `Token ${token}` };
 	}
 
 	protected override buildParams(
@@ -30,11 +43,6 @@ export class FindworkJobClient extends JobClient<FindWorkResponse> {
 		page: number
 	): JobClientRequestParams {
 		return { format: "json", search: query.title, page };
-	}
-
-	protected override buildHeaders(): JobClientRequestHeaders {
-		const token = this.config.getOrThrow("FINDWORK_API_KEY", { infer: true });
-		return { Authorization: `Token ${token}` };
 	}
 
 	protected override getResponseSchema(): JobClientResponseSchema<FindWorkResponse> {

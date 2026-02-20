@@ -4,7 +4,7 @@ import { TrendSeriesInputSchema } from "../schema/trend-series-input.schema";
 
 export const jobContract = populateContractRouterPaths({
 	job: {
-		trendSeries: oc
+		"trend-series": oc
 			.route({ method: "GET" })
 			.input(TrendSeriesInputSchema)
 			.output(TrendSeriesDtoSchema),
