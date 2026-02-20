@@ -1,11 +1,41 @@
 import eslint from "@eslint/js";
+import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTs from "eslint-config-next/typescript";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 import globals from "globals";
-import tseslint from "typescript-eslint";
+import tseslint, { ConfigArray } from "typescript-eslint";
+
+const NEXT_APP_GLOBS = ["frontend/*/"];
+
+function scopeToNextApps(configArray: ConfigArray) {
+	return configArray.map(config => ({
+		...config,
+		files: (config.files ?? ["**/*.{js,jsx,ts,tsx}"]).flatMap(pattern =>
+			NEXT_APP_GLOBS.map(appRoot => `${appRoot}${pattern}`)
+		),
+	}));
+}
 
 export default tseslint.config(
+	scopeToNextApps(nextVitals),
+	scopeToNextApps(nextTs),
+
 	{
-		ignores: ["eslint.config.mts", "**/dist/**", "**/build/**"],
+		files: NEXT_APP_GLOBS.map(p => `${p}**/*.{js,jsx,ts,tsx}`),
+		settings: {
+			next: { rootDir: NEXT_APP_GLOBS },
+		},
+	},
+
+	{
+		ignores: [
+			"eslint.config.mts",
+			"**/dist/**",
+			"**/build/**",
+			"**/.next/**",
+			"**/out/**",
+			"**/next-env.d.ts",
+		],
 	},
 	eslint.configs.recommended,
 	...tseslint.configs.recommendedTypeChecked,

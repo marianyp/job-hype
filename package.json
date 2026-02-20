@@ -2,8 +2,9 @@
 	"name": "job-hype",
 	"private": true,
 	"workspaces": [
+		"shared",
 		"api",
-		"shared"
+		"frontend"
 	],
 	"scripts": {
 		"dev:shared": "npm -w shared run build -- --watch",
@@ -12,13 +13,14 @@
 		"lint:check": "eslint \"*/**/src/**/*.{ts,tsx}\"",
 		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
 		"format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
-		"types:check": "tsc --noEmit -p shared/tsconfig.json && tsc --noEmit -p api/tsconfig.json"
+		"types:check": "tsc --noEmit -p shared/tsconfig.json && tsc --noEmit -p api/tsconfig.json && tsc --noEmit -p frontend/tsconfig.json"
 	},
 	"overrides": {
 		"typescript": "^5.9.3"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"eslint-config-next": "^16.1.6",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.5",
 		"globals": "^17.3.0",

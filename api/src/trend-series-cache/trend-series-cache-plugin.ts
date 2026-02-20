@@ -46,29 +46,27 @@ export class TrendSeriesCachePlugin<
 		options.interceptors ??= [];
 
 		options.interceptors.unshift(async interceptorOptions => {
-			const { next } = interceptorOptions;
-
 			const request = this.getRequest(interceptorOptions.context);
 
 			if (!request) {
-				return await next();
+				return await interceptorOptions.next();
 			}
 
 			if (request.method !== "GET") {
-				return await next();
+				return await interceptorOptions.next();
 			}
 
 			const parsedQuery = TrendSeriesInputSchema.safeParse(request.query);
 
 			if (!parsedQuery.success) {
-				return await next();
+				return await interceptorOptions.next();
 			}
 
 			const key = this.getCacheKey(parsedQuery.data);
 
 			const parsedCachedValue = await this.cache
 				.get(key)
-				.then(TrendSeriesDtoSchema.safeParse);
+				.then(value => TrendSeriesDtoSchema.safeParse(value));
 
 			if (parsedCachedValue.success) {
 				const hitResult: StandardHandleResult = {
@@ -86,7 +84,7 @@ export class TrendSeriesCachePlugin<
 				return hitResult;
 			}
 
-			const result = await next();
+			const result = await interceptorOptions.next();
 
 			if (result.matched) {
 				this.cacheData(key, result.response.body);
@@ -115,7 +113,7 @@ export class TrendSeriesCachePlugin<
 			const parsedResponse = TrendSeriesDtoSchema.safeParse(data);
 
 			if (parsedResponse.success) {
-				this.cache.set(key, parsedResponse.data, millisecondsToLive);
+				void this.cache.set(key, parsedResponse.data, millisecondsToLive);
 			} else {
 				this.logger.error(
 					`Found invalid trend series shape for cache ${JSON.stringify(data)}`
