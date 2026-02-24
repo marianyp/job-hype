@@ -1,0 +1,11 @@
+{
+	"name": "edge-proxy",
+	"version": "0.0.0",
+	"description": "",
+	"license": "UNLICENSED",
+	"author": "Mariany Pinkston",
+	"scripts": {},
+	"devDependencies": {
+		"wrangler": "^4.68.1"
+	}
+}
