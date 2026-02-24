@@ -14,10 +14,12 @@ async function bootstrap(): Promise<void> {
 
 	const app = await NestFactory.create(AppModule);
 
-	app.enableCors({
-		origin: ["http://localhost:3000"],
-		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-	});
+	if (process.env.NODE_ENV === "development") {
+		app.enableCors({
+			origin: ["http://localhost:3000"],
+			methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+		});
+	}
 
 	await app.listen(port);
 }

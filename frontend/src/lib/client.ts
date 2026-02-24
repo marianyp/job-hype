@@ -4,8 +4,10 @@ import { ContractRouterClient } from "@orpc/contract";
 import { JsonifiedClient } from "@orpc/openapi-client";
 import { OpenAPILink } from "@orpc/openapi-client/fetch";
 
+const apiBase = new URL("/api/", window.location.origin);
+
 const link = new OpenAPILink(jobContract, {
-	url: "http://127.0.0.1:4000",
+	url: apiBase,
 });
 
 const orpc: JsonifiedClient<ContractRouterClient<JobContract>> =
