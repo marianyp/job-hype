@@ -5,7 +5,7 @@ import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended"
 import globals from "globals";
 import tseslint, { ConfigArray } from "typescript-eslint";
 
-const NEXT_APP_GLOBS = ["frontend/*/"];
+const NEXT_APP_GLOBS = ["apps/frontend/*/"];
 
 function scopeToNextApps(configArray: ConfigArray) {
 	return configArray.map(config => ({
@@ -19,7 +19,6 @@ function scopeToNextApps(configArray: ConfigArray) {
 export default tseslint.config(
 	scopeToNextApps(nextVitals),
 	scopeToNextApps(nextTs),
-
 	{
 		files: NEXT_APP_GLOBS.map(p => `${p}**/*.{js,jsx,ts,tsx}`),
 		settings: {
@@ -27,7 +26,6 @@ export default tseslint.config(
 			react: { version: "19" },
 		},
 	},
-
 	{
 		ignores: [
 			"eslint.config.mts",
@@ -36,6 +34,7 @@ export default tseslint.config(
 			"**/.next/**",
 			"**/out/**",
 			"**/next-env.d.ts",
+			"**/node_modules/**",
 		],
 	},
 	eslint.configs.recommended,

@@ -30,6 +30,7 @@
 		"@orpc/nest": "^1.13.5",
 		"@orpc/server": "^1.13.5",
 		"axios": "^1.13.5",
+		"cache-manager": "^7.2.8",
 		"cacheable": "^2.3.2",
 		"keyv": "^5.6.0",
 		"luxon": "^3.7.2",
