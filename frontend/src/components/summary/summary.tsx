@@ -14,8 +14,13 @@ export default function Summary({ trendSeries }: NotesProps): JSX.Element {
 			formatters: Object.values(formatters),
 		});
 
-		return formatter.map((value, type, index) => (
-			<SummaryItem key={`summary-item-${index}`} value={value} type={type} />
+		return formatter.map(({ index, label, type, value }) => (
+			<SummaryItem
+				key={`summary-item-${index}`}
+				label={label}
+				value={value}
+				type={type}
+			/>
 		));
 	}, [trendSeries]);
 

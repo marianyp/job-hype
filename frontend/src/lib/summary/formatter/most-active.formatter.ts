@@ -7,13 +7,19 @@ export default class MostActiveFormatter extends SummaryFormatter {
 		super(SummaryType.Positive);
 	}
 
-	public compute(summary: TrendSeriesSummary): string {
+	public override getLabel(summary: TrendSeriesSummary): string | null {
 		const unit = summary.unitName();
 		const buckets = MostActiveFormatter.getMostProductiveBuckets(summary);
 		const pluralizedBuckets = SummaryFormatter.pluralize(buckets.length, unit);
+
+		return `Most active ${pluralizedBuckets}`;
+	}
+
+	public override getValue(summary: TrendSeriesSummary): string {
+		const buckets = MostActiveFormatter.getMostProductiveBuckets(summary);
 		const normalizedBuckets = SummaryFormatter.normalizeBuckets(buckets);
 
-		return `Most active ${pluralizedBuckets}: ${normalizedBuckets}`;
+		return normalizedBuckets;
 	}
 
 	private static getMostProductiveBuckets(

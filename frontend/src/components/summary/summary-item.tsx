@@ -4,13 +4,15 @@ import { CheckCircle, Info, XCircle } from "phosphor-react";
 import { JSX, useMemo } from "react";
 
 export type SummaryItemProps = {
+	label: string;
 	value: string;
 	type: SummaryType;
 };
 
 export default function SummaryItem({
-	value,
+	label,
 	type,
+	value,
 }: SummaryItemProps): JSX.Element {
 	const indicatorMapping = useMemo(
 		() => ({
@@ -39,7 +41,12 @@ export default function SummaryItem({
 		<List.Item listStyleType="none">
 			<HStack>
 				{indicatorIcon}
-				<Text color="gray.200">{value}</Text>
+				<Text color="gray.200">
+					<Text display="inline-block" fontWeight="bold">
+						{label}:
+					</Text>{" "}
+					{value}
+				</Text>
 			</HStack>
 		</List.Item>
 	);

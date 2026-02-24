@@ -8,7 +8,9 @@ export default abstract class SummaryFormatter {
 		return this.type;
 	}
 
-	public abstract compute(summary: TrendSeriesSummary): string | null;
+	public abstract getLabel(summary: TrendSeriesSummary): string | null;
+
+	public abstract getValue(summary: TrendSeriesSummary): string | null;
 
 	public static formatAverage(index: number): string {
 		if (index === 0) {

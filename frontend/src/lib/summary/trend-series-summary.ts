@@ -14,11 +14,14 @@ export type LongestStreakResult = {
 	buckets: string[];
 };
 
-export type MapCallback<T> = (
-	value: string,
-	type: SummaryType,
-	index: number
-) => T;
+export type MapCallbackArguments = {
+	label: string;
+	value: string;
+	type: SummaryType;
+	index: number;
+};
+
+export type MapCallback<T> = (args: MapCallbackArguments) => T;
 
 export default class TrendSeriesSummary {
 	private readonly granularity: GranularityKey;
@@ -112,10 +115,11 @@ export default class TrendSeriesSummary {
 		return this.formatters
 			.map((formatter, originalIndex) => ({
 				type: formatter.getType(),
-				value: formatter.compute(this),
+				label: formatter.getLabel(this),
+				value: formatter.getValue(this),
 				originalIndex,
 			}))
-			.filter(({ value }) => value !== null)
+			.filter(({ label, value }) => label !== null && value !== null)
 			.sort((firstValue, secondValue) => {
 				const byType =
 					orderMapping[firstValue.type] - orderMapping[secondValue.type];
@@ -124,12 +128,16 @@ export default class TrendSeriesSummary {
 					? byType
 					: firstValue.originalIndex - secondValue.originalIndex;
 			})
-			.map(({ type, value }, index) => {
+			.map(({ label, type, value }, index) => {
+				if (label === null) {
+					throw new TypeError("Expected format label to be a string");
+				}
+
 				if (value === null) {
 					throw new TypeError("Expected format result value to be a string");
 				}
 
-				return callback(value, type, index);
+				return callback({ label, value, type, index });
 			});
 	}
 

@@ -13,7 +13,11 @@ export default class LargestChangeFormatter extends SummaryFormatter {
 		super(SummaryType.Informational);
 	}
 
-	public compute(summary: TrendSeriesSummary): string | null {
+	public override getLabel(): string {
+		return `Largest change between day(s)`;
+	}
+
+	public override getValue(summary: TrendSeriesSummary): string | null {
 		const biggestJump =
 			LargestChangeFormatter.getLargestConsecutiveChange(summary);
 
@@ -23,16 +27,12 @@ export default class LargestChangeFormatter extends SummaryFormatter {
 
 		const { delta, from, to } = biggestJump;
 
-		const unit = summary.unitName();
-
-		const pluralizedUnit = SummaryFormatter.pluralize(2, unit);
-
 		const formattedDelta = LargestChangeFormatter.formatDelta(delta);
 
 		const normalizedFrom = SummaryFormatter.normalizeBucket(from);
 		const normalizedTo = SummaryFormatter.normalizeBucket(to);
 
-		return `Largest change between consecutive ${pluralizedUnit}: ${normalizedFrom} to ${normalizedTo} (${formattedDelta} points).`;
+		return `${normalizedFrom} to ${normalizedTo} (${formattedDelta} points)`;
 	}
 
 	private static getLargestConsecutiveChange(

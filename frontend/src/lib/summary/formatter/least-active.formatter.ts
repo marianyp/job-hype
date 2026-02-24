@@ -7,13 +7,19 @@ export default class LeastActiveFormatter extends SummaryFormatter {
 		super(SummaryType.Negative);
 	}
 
-	public compute(summary: TrendSeriesSummary): string {
+	public override getLabel(summary: TrendSeriesSummary): string | null {
 		const unit = summary.unitName();
 		const buckets = LeastActiveFormatter.getLeastProductiveBuckets(summary);
 		const pluralizedBuckets = SummaryFormatter.pluralize(buckets.length, unit);
+
+		return `Least active ${pluralizedBuckets}`;
+	}
+
+	public override getValue(summary: TrendSeriesSummary): string {
+		const buckets = LeastActiveFormatter.getLeastProductiveBuckets(summary);
 		const normalizedBuckets = SummaryFormatter.normalizeBuckets(buckets);
 
-		return `Least active ${pluralizedBuckets}: ${normalizedBuckets}`;
+		return normalizedBuckets;
 	}
 
 	private static getLeastProductiveBuckets(
