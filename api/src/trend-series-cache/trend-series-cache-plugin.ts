@@ -94,14 +94,14 @@ export class TrendSeriesCachePlugin<
 		});
 	}
 
-	private getCacheKey({ granularity, title }: TrendSeriesInput): string {
+	private getCacheKey({ granularity, query }: TrendSeriesInput): string {
 		const version = this.configService.get("CACHE_VERSION", { infer: true });
 
 		if (version === undefined) {
 			throw new ReferenceError("Cache version is not defined");
 		}
 
-		const normalizedTitle = encodeURIComponent(title.trim().toLowerCase());
+		const normalizedTitle = encodeURIComponent(query.trim().toLowerCase());
 
 		return `v${version}:trend-series:granularity=${granularity}:title=${normalizedTitle}`;
 	}

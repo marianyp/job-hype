@@ -27,3 +27,4 @@ This normalized index represents relative posting activity. This approach emphas
 - `100` = average posting volume for the sampled range
 - `200` = double the average
 - `50` = half the average
+- `0` = insufficient data

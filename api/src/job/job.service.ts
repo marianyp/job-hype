@@ -20,15 +20,15 @@ export class JobService {
 	public async fetchAndGetTrendSeries(
 		input: TrendSeriesInput
 	): Promise<TrendSeriesDto> {
-		const { granularity: granularityKey, title } = input;
+		const { granularity: granularityKey, query } = input;
 
 		const originDate = this.dateService.getDate();
 
-		const query = new JobQuery(title);
+		const jobQuery = new JobQuery(query);
 		const granularity = this.granularityRegistry.get(granularityKey);
 
 		const providerResults = await Promise.allSettled(
-			this.clients.map(provider => provider.fetchJobs(query))
+			this.clients.map(provider => provider.fetchJobs(jobQuery))
 		);
 
 		const fulfilledResults = providerResults.filter(

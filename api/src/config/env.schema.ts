@@ -1,6 +1,8 @@
 import * as z from "zod";
 
 export const envSchema = z.object({
+	PORT: z.coerce.number(),
+
 	CACHE_VERSION: z.coerce.number(),
 
 	TIMEZONE: z.string(),

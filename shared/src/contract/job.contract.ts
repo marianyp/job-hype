@@ -10,3 +10,5 @@ export const jobContract = populateContractRouterPaths({
 			.output(TrendSeriesDtoSchema),
 	},
 });
+
+export type JobContract = typeof jobContract;

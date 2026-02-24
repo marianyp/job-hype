@@ -24,6 +24,7 @@ export default tseslint.config(
 		files: NEXT_APP_GLOBS.map(p => `${p}**/*.{js,jsx,ts,tsx}`),
 		settings: {
 			next: { rootDir: NEXT_APP_GLOBS },
+			react: { version: "19" },
 		},
 	},
 
