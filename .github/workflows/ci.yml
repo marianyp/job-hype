@@ -19,16 +19,17 @@ jobs:
           node-version: 22
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared
+        run: npm run -w apps/shared build
 
       - name: Typecheck
-        run: |
-          npm run types:check
+        run: npm run types:check
 
       - name: Lint
-        run: |
-          npm run lint
+        run: npm run lint
 
       - name: Unit tests
-        run: |
-          npm run test
+        run: npm run test
