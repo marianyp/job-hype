@@ -1,4 +1,6 @@
-import client from "@/lib/client";
+"use client";
+
+import createClient from "@/lib/client";
 import {
 	Box,
 	Heading,
@@ -10,12 +12,12 @@ import {
 } from "@chakra-ui/react";
 import { GranularityKey, TrendSeriesDto } from "@job-hype/shared";
 import { JSX, useEffect, useMemo, useRef, useState } from "react";
-import DownloadElementButton from "./download-element-button";
-import DownloadJsonButton from "./download-json-button";
-import SearchTermPill from "./search-term-pill";
-import ShareButton from "./share-button";
-import Summary from "./summary/summary";
-import TrendSeriesChart from "./trend-series-chart";
+import DownloadElementButton from "../download-element-button";
+import DownloadJsonButton from "../download-json-button";
+import SearchTermPill from "../search-term-pill";
+import ShareButton from "../share-button";
+import Summary from "../summary/summary";
+import TrendSeriesChart from "../trend-series-chart";
 
 type ContainerProps = Omit<HTMLChakraProps<"div">, "direction">;
 
@@ -41,7 +43,7 @@ export default function TrendResults({
 
 		const controller = new AbortController();
 
-		client
+		createClient()
 			.getTrends({ granularity, query }, { signal: controller.signal })
 			.then(setTrendSeries)
 			.catch(error => {

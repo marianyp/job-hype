@@ -1,32 +1,13 @@
 "use client";
 
-import TrendResults from "@/components/trend-results";
-import { GranularityKey } from "@job-hype/shared";
-import { useSearchParams } from "next/navigation";
-import { JSX, useCallback } from "react";
+import ClientTrendResults from "@/components/trend-results/client-trend-results";
+import { Loader } from "@chakra-ui/react";
+import { JSX, Suspense } from "react";
 
 export default function Page(): JSX.Element {
-	const searchParams = useSearchParams();
-
-	const normalize = useCallback(
-		(value: string | null) => (value ?? "").trim().toLowerCase(),
-		[]
+	return (
+		<Suspense fallback={<Loader />}>
+			<ClientTrendResults />
+		</Suspense>
 	);
-
-	const isGranularity = useCallback(
-		(value: string): value is GranularityKey => {
-			return Object.values(GranularityKey).map(String).includes(value);
-		},
-		[]
-	);
-
-	const query = normalize(searchParams.get("query"));
-
-	const granularityParam = normalize(searchParams.get("granularity"));
-
-	const granularity = isGranularity(granularityParam)
-		? granularityParam
-		: GranularityKey.Week;
-
-	return <TrendResults query={query} granularity={granularity} />;
 }

@@ -1,3 +1,5 @@
+"use client";
+
 import { Button } from "@chakra-ui/react";
 import { Link } from "phosphor-react";
 import { ComponentProps, JSX, PropsWithChildren, useCallback } from "react";
