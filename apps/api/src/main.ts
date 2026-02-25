@@ -21,7 +21,7 @@ async function bootstrap(): Promise<void> {
 		});
 	}
 
-	await app.listen(port);
+	await app.listen(port, "0.0.0.0");
 }
 
 bootstrap().catch(console.error);
