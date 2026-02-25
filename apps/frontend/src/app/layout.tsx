@@ -21,7 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
 	title: "JobHype",
-	description: "Simple job posting data",
+	description:
+		"Optimize your job search and discover what job postings are trending.",
 };
 
 export default function RootLayout({
