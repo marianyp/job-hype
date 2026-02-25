@@ -11,6 +11,15 @@ concurrency:
 jobs:
   checks:
     runs-on: ubuntu-latest
+    env:
+      PORT: ${{ vars.PORT }}
+      CACHE_VERSION: ${{ vars.CACHE_VERSION }}
+      TIMEZONE: ${{ vars.TIMEZONE }}
+      ADZUNA_BASE_URL: ${{ vars.ADZUNA_BASE_URL }}
+      ADZUNA_APP_ID: ${{ secrets.ADZUNA_APP_ID }}
+      ADZUNA_APP_KEY: ${{ secrets.ADZUNA_APP_KEY }}
+      FINDWORK_BASE_URL: ${{ vars.FINDWORK_BASE_URL }}
+      FINDWORK_API_KEY: ${{ secrets.FINDWORK_API_KEY }}
     needs: []
     steps:
       - uses: actions/checkout@v4
