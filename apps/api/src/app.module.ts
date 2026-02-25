@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { ThrottlerModule } from "@nestjs/throttler";
+import { AppController } from "./app.controller";
 import { envSchema } from "./config/env.schema";
 import { DateModule } from "./date/date.module";
 import { JobModule } from "./job/job.module";
@@ -21,5 +22,6 @@ import { JobModule } from "./job/job.module";
 		JobModule,
 		DateModule,
 	],
+	controllers: [AppController],
 })
 export class AppModule {}
