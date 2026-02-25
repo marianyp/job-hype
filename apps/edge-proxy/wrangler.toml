@@ -1,3 +1,8 @@
 name = "edge-proxy"
 main = "src/index.ts"
 compatibility_date = "2026-02-24"
+
+routes = [
+	{ pattern = "jobhype.io/api/*", zone_name = "jobhype.io" },
+	{ pattern = "www.jobhype.io/api/*", zone_name = "jobhype.io" },
+]
