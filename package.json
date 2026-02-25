@@ -5,10 +5,10 @@
 		"apps/*"
 	],
 	"scripts": {
-		"build:api": "npm ci && npm -w api run build",
-		"start:api": "npm -w api run start",
-		"dev:shared": "npm -w shared run build -- --watch",
-		"dev:api": "npm -w api run start:dev",
+		"build:api": "npm ci && npm -w @job-hype/api run build",
+		"start:api": "npm -w @job-hype/api run start",
+		"dev:shared": "npm -w @job-hype/shared run build -- --watch",
+		"dev:api": "npm -w @job-hype/api run start:dev",
 		"lint": "eslint \"*/**/src/**/*.{ts,tsx}\" --fix",
 		"lint:check": "eslint \"*/**/src/**/*.{ts,tsx}\"",
 		"format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
