@@ -1,0 +1,14 @@
+{
+	"name": "keep-warm",
+	"version": "0.0.0",
+	"description": "",
+	"license": "UNLICENSED",
+	"author": "Mariany Pinkston",
+	"scripts": {
+		"typecheck": "tsc --noEmit -p tsconfig.json"
+	},
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20260304.0",
+		"wrangler": "^4.68.1"
+	}
+}
