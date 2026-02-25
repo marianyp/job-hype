@@ -5,7 +5,7 @@
 		"apps/*"
 	],
 	"scripts": {
-		"build:api": "npm ci && npm -w @job-hype/api ci && npm -w @job-hype/api run build",
+		"build:api": "npm ci && npm -w @job-hype/shared run build && npm -w @job-hype/api run build",
 		"start:api": "npm -w @job-hype/api run start",
 		"dev:shared": "npm -w @job-hype/shared run build -- --watch",
 		"dev:api": "npm -w @job-hype/api run start:dev",
