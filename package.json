@@ -5,6 +5,8 @@
 		"apps/*"
 	],
 	"scripts": {
+		"build:api": "npm ci && npm -w api run build",
+		"start:api": "npm -w api run start",
 		"dev:shared": "npm -w shared run build -- --watch",
 		"dev:api": "npm -w api run start:dev",
 		"lint": "eslint \"*/**/src/**/*.{ts,tsx}\" --fix",
