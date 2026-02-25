@@ -18,7 +18,7 @@ export class Job {
 	}
 
 	public static parseDate(value: string): DateTime | null {
-		const date = DateTime.fromISO(value);
+		const date = DateTime.fromISO(value, { setZone: true });
 
 		if (isNaN(date.valueOf())) {
 			return null;
