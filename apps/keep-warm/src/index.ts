@@ -1,8 +1,3 @@
-import type {
-	ExecutionContext,
-	ScheduledEvent,
-} from "@cloudflare/workers-types";
-
 export interface Env {
 	API_ORIGIN?: string;
 }
